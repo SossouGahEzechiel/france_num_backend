@@ -9,6 +9,13 @@ module.exports = sequelize.define(tableName, {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isNotNull: {msg: "Le nom est obligatoire"},
+    }
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,

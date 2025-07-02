@@ -10,6 +10,7 @@ module.exports = {
     await queryInterface.bulkInsert("users", [{
       id: require("uuid").v4(),
       email: "admin@test.dev",
+      name: "John Doe",
       password: encryptedPassword,
       createdAt: new Date(),
     }]);
