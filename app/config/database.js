@@ -3,7 +3,7 @@ require("dotenv").config();
 module.exports = {
   development: {
     dialect: "sqlite",
-    storage: process.env.DB_STORAGE || "./database/database.sqlite",
+    storage: "./database/database.sqlite",
     logging: console.log
   },
   production: {

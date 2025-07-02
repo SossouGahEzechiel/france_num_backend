@@ -1,16 +1,19 @@
 const {User} = require("../models");
 const {compare} = require("bcrypt");
 const {sign} = require("jsonwebtoken");
+const {validationResult} = require("express-validator")
 
 require("dotenv").config();
 
 exports.login = (req, res) => {
+
+  const results = validationResult(req).array();
+  if(results.length > 0) {
+    return res.status(422).json({message: results[0].msg});
+  }
+
   const password = req.body.password;
   const email = req.body.email;
-
-  if (!email || !password) {
-    return res.status(422).json({message: "L'email et le mot de passe sont requis"});
-  }
 
   try {
     User.findOne({where: {email}})
