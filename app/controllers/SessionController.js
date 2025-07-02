@@ -1,6 +1,7 @@
 const {User} = require("../models");
 const {compare} = require("bcrypt");
 const {sign} = require("jsonwebtoken");
+
 require("dotenv").config();
 
 exports.login = (req, res) => {
@@ -26,13 +27,13 @@ exports.login = (req, res) => {
 
             const token = sign(
               {userId: user.id},
-              "bgfhj25645gh",
-              {expiresIn: "2h"}
+              process.env.JWT_SECRET,
+              {expiresIn: process.env.JWT_EXPIRES_IN}
             );
-
+            const {password, ...safeData} = user.toJSON();
             return res.status(200).json({
               data: {
-                userId: user.get({attributes: {exclude: ["password"]}}).toJSON(),
+                user: safeData,
                 token
               }
             });
