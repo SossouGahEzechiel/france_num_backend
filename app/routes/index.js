@@ -4,9 +4,13 @@ const router = express.Router();
 const formRoutes = require("../routes/FormRoutes");
 const contactDataRoutes = require("../routes/ContactDataRoutes");
 const sessionRoutes = require("../routes/SessionRoutes");
+const userRoutes = require("../routes/UserRoutes");
+
+const authSessionMiddleware = require("../middlewares/AuthenticatedUserMiddleware");
 
 router.use("/forms", formRoutes);
 router.use("/contact-data", contactDataRoutes);
 router.use("/auth", sessionRoutes);
+router.use("/users", authSessionMiddleware, userRoutes);
 
 module.exports = router;

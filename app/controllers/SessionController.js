@@ -22,26 +22,22 @@ exports.login = (req, res) => {
           return res.status(422).json({message: "Identifiants incorrects"});
         }
 
-        compare(password, user.password)
-          .then(valid => {
-            if (!valid) {
-              return res.status(422).json({message: "Identifiants incorrects"});
-            }
+        if (!user.comparePassword(password)) {
+          return res.status(422).json({message: "Identifiants incorrects"});
+        }
 
-            const token = sign(
-              {userId: user.id},
-              process.env.JWT_SECRET,
-              {expiresIn: process.env.JWT_EXPIRES_IN}
-            );
-            const {password, ...safeData} = user.toJSON();
-            return res.status(200).json({
-              data: {
-                user: safeData,
-                token
-              }
-            });
-          })
-          .catch(error => res.status(500).json({message: "Une erreur est survenue", error: error.message}));
+        const token = sign(
+          {userId: user.id},
+          process.env.JWT_SECRET,
+          {expiresIn: process.env.JWT_EXPIRES_IN}
+        );
+
+        return res.status(200).json({
+          data: {
+            user: user.toJSON(),
+            token
+          }
+        });
       });
   } catch (e) {
     return res.status(500).json({message: "Une erreur est survenue", error: e});

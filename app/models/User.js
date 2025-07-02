@@ -1,9 +1,10 @@
 const {sequelize} = require("./../database/init");
 const {DataTypes} = require("sequelize");
+const {hashSync, compare, compareSync} = require("bcrypt");
 
 const tableName = "users";
 
-module.exports = sequelize.define(tableName, {
+const User = sequelize.define(tableName, {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -12,26 +13,31 @@ module.exports = sequelize.define(tableName, {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      isNotNull: {msg: "Le nom est obligatoire"},
-    }
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      isEmail: {msg: "Adresse mail non valide"},
-      isNotNull: {msg: "L'adresse mail est obligatoire"},
-    }
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      isNotNull: {msg: "Le mot de passe est obligatoire"},
+    set(value) {
+      this.setDataValue("password", hashSync(value, parseInt(process.env.BCRYPT_SALT)));
     }
   },
 }, {
   timestamps: true,
   updatedAt: false
 });
+
+User.prototype.toJSON = function () {
+  const values = {...this.get()};
+  delete values.password;
+  return values;
+};
+
+User.prototype.comparePassword = function (password) {
+  return compareSync(password, this.getDataValue("password"));
+};
+
+module.exports = User;
