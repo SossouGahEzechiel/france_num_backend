@@ -7,9 +7,10 @@ require("dotenv").config();
 
 exports.login = (req, res) => {
 
-  const results = validationResult(req).array();
-  if(results.length > 0) {
-    return res.status(422).json({message: results[0].msg});
+  const results = validationResult(req);
+
+  if (!results.isEmpty()) {
+    return res.status(422).json({message: results.array().at(0).msg, error: results})
   }
 
   const password = req.body.password;

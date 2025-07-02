@@ -19,10 +19,10 @@ exports.index = (req, res) => {
 
 exports.store = (req, res) => {
 
-  const results = validationResult(req).array();
+  const results = validationResult(req);
 
-  if (results.length > 0) {
-    return res.status(422).json({message: results[0].msg, error: results})
+  if (!results.isEmpty()) {
+    return res.status(422).json({message: results.array().at(0).msg, error: results})
   }
 
   Form.create({

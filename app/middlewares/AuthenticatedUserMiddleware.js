@@ -3,7 +3,7 @@ const {User} = require("../models");
 module.exports = (req, res, next) => {
   const header = req.headers.authorization;
 
-  if(!header) {
+  if (!header) {
     return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
   }
 
@@ -21,7 +21,8 @@ module.exports = (req, res, next) => {
 
     User.findByPk(payload.userId)
       .then(user => {
-        req.user = user.get({attributes: {exclude: ["password"]}}).toJSON();
+        const {password, ...safeData} = user.toJSON();
+        req.user = safeData;
         next();
       }).catch(_ => {
       console.log("Auth middleware error:", _);

@@ -6,7 +6,7 @@ module.exports = [
     .notEmpty()
     .withMessage('Votre nom est obligatoire')
     .isLength({ min: 2, max: 100 })
-    .withMessage('Votre nom doit avoir entre 2 et 1222 caractères')
+    .withMessage('Votre nom doit avoir entre 2 et 100 caractères')
     .trim()
     .escape(),
 
