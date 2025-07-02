@@ -1,5 +1,6 @@
 const {verify} = require("jsonwebtoken");
 const {User} = require("../models");
+
 module.exports = (req, res, next) => {
   const header = req.headers.authorization;
 

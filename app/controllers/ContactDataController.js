@@ -1,7 +1,7 @@
 const {ContactData} = require("../models");
 const {ValidationError} = require("sequelize");
 const {dateFormatter} = require("./../helpers/index");
-const {validationResult} = require("express-validator");
+const {validationResult, matchedData} = require("express-validator");
 
 exports.index = (req, res) => {
   ContactData.findAll({attributes: {exclude: ["createdAt"]}})
@@ -26,7 +26,7 @@ exports.update = (req, res) => {
     return res.status(422).json({message: results.array().at(0).msg, error: results.array()})
   }
 
-  ContactData.update(req.body, {
+  ContactData.update(matchedData(req), {
     where: {id: req.params.id},
   })
     .then(([status]) => {
@@ -34,7 +34,9 @@ exports.update = (req, res) => {
         return res.status(500).json({message: "La mise à jour a échoué"});
       }
 
-      ContactData.findByPk(req.params.id)
+      ContactData.findByPk(req.params.id, {
+        attributes: {exclude: ["createdAt"]}
+      })
         .then(data => {
           let config = data.toJSON();
           config = {

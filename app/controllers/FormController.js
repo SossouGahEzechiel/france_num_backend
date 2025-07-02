@@ -1,7 +1,7 @@
 const {Form} = require("../models");
 const {ValidationError} = require("sequelize");
 const {dateFormatter} = require("../helpers");
-const {validationResult} = require("express-validator");
+const {validationResult, matchedData} = require("express-validator");
 
 exports.index = (req, res) => {
   Form.findAll()
@@ -25,12 +25,7 @@ exports.store = (req, res) => {
     return res.status(422).json({message: results.array().at(0).msg, error: results})
   }
 
-  Form.create({
-    fullName: req.body.fullName,
-    email: req.body.email,
-    phone: req.body.phone,
-    business: req.body.business,
-  })
+  Form.create(matchedData(req))
     .then(() => res.status(201).json({message: "Formulaire envoyé"}))
     .catch((error) => {
       if (error instanceof ValidationError) {

@@ -1,7 +1,7 @@
 const {User} = require("../models");
 const {compare} = require("bcrypt");
 const {sign} = require("jsonwebtoken");
-const {validationResult} = require("express-validator")
+const {validationResult, matchedData} = require("express-validator")
 
 require("dotenv").config();
 
@@ -13,8 +13,7 @@ exports.login = (req, res) => {
     return res.status(422).json({message: results.array().at(0).msg, error: results})
   }
 
-  const password = req.body.password;
-  const email = req.body.email;
+  const {email, password} = matchedData(req);
 
   try {
     User.findOne({where: {email}})
