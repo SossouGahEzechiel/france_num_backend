@@ -1,5 +1,4 @@
 const {User} = require("../models");
-const {compare} = require("bcrypt");
 const {sign} = require("jsonwebtoken");
 const {validationResult, matchedData} = require("express-validator")
 
@@ -51,4 +50,12 @@ exports.logout = (req, res) => {
 
   req.user = null;
   return res.status(200).json({message: "Déconnecté"});
+};
+
+exports.refreshData = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
+  }
+
+  return res.status(200).json({data: req.user});
 };
