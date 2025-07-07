@@ -9,7 +9,7 @@ module.exports = {
   production: {
     dialect: process.env.DB_DIALECT || "postgres",
     url: process.env.DB_CONNEXION_STRING,
-    logging: console.warn,
+    logging: false,
     dialectOptions: {
       ssl: {
         require: true, // Exiger SSL
