@@ -4,6 +4,8 @@ const {User} = require("../models");
 module.exports = (req, res, next) => {
   const header = req.headers.authorization;
 
+  console.log("header:", header);
+
   if (!header) {
     return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
   }
@@ -17,7 +19,7 @@ module.exports = (req, res, next) => {
     const payload = verify(token, process.env.JWT_SECRET);
 
     if (!payload) {
-      return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
+      return res.status(401).json({message: "Votre session a expiré, merci de vous connecter à nouveau"});
     }
 
     User.findByPk(payload.userId)
