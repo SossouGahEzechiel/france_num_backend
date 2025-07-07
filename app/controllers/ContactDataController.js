@@ -1,19 +1,26 @@
-const {ContactData} = require("../models");
+const {ContactData, User} = require("../models");
 const {ValidationError} = require("sequelize");
 const {dateFormatter} = require("./../helpers/index");
 const {validationResult, matchedData} = require("express-validator");
 
 exports.index = (req, res) => {
-  ContactData.findAll({attributes: {exclude: ["createdAt"]}})
+  ContactData.findAll({
+    attributes: {exclude: ["createdAt"]},
+    include: User
+  })
     .then(data => {
       let config = data.at(0);
-      if(!config)
+      if (!config)
         return res.json({message: "Aucune configuration", data: {}});
-      config = {
-        ...config.toJSON(),
-        updatedAt: dateFormatter(config.updatedAt)
-      };
-      res.json({data: config || {}})
+      const {user, userId, ...configData} = config.toJSON(); // exclude User
+
+      res.json({
+        data: {
+          ...configData,
+          updatedAt: dateFormatter(config.updatedAt),
+          adminName: config.user?.name
+        }
+      });
     })
     .catch(error => res.status(500).json({message: error.message, error}));
 };
@@ -26,11 +33,11 @@ exports.update = (req, res) => {
     return res.status(422).json({message: results.array().at(0).msg, error: results.array()})
   }
 
-  ContactData.update(matchedData(req), {
+  ContactData.update({...matchedData(req), userId: req.user.id}, {
     where: {id: req.params.id},
   })
     .then(([status]) => {
-      if(!status) {
+      if (!status) {
         return res.status(500).json({message: "La mise à jour a échoué"});
       }
 

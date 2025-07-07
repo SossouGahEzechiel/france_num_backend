@@ -37,5 +37,9 @@ module.exports = sequelize.define(tableName, {
     validate: {
       notNull: {msg: "La fonction de responsable de contact ne peut être vide"}
     }
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: true
   }
 });
