@@ -1,5 +1,5 @@
 const {Form} = require("../models");
-const {ValidationError} = require("sequelize");
+const {ValidationError, Op} = require("sequelize");
 const {dateFormatter} = require("../helpers");
 const {validationResult, matchedData} = require("express-validator");
 
@@ -26,7 +26,9 @@ exports.store = (req, res) => {
   }
 
   Form.create(matchedData(req))
-    .then(() => res.status(201).json({message: "Formulaire envoyé"}))
+    .then(async form => {
+      res.status(201).json({message: "Formulaire envoyé"});
+    })
     .catch((error) => {
       if (error instanceof ValidationError) {
         return res.status(422).json({message: error.errors[0].message, error});
@@ -35,9 +37,11 @@ exports.store = (req, res) => {
     });
 }
 
-exports.show = (req, res) => {
-  Form.findByPk(req.params.id)
-    .then(form => {
+exports.update = (req, res) => {
+  Form.update({updatedAt: new Date(), viewed: true, userId: req.user.id}, {
+    where: {id: req.params.id}
+  })
+    .then(([form]) => {
       if (!form) {
         return res.status(404).json({message: "Formulaire introuvable"});
       }
@@ -46,20 +50,38 @@ exports.show = (req, res) => {
     .catch((error) => res.status(500).json({message: "Une erreur est survenue", error}));
 }
 
-// exports.news = (req, res) => {
-//   Form.findAll({
-//     where: {
-//
-//     }
-//   })
-//     .then(forms => {
-//       forms = forms.map(form => {
-//         return {
-//           ...form.toJSON(),
-//           createdAt: dateFormatter(form.createdAt),
-//         }
-//       });
-//       return res.json({message: "Formulaires chargés", data: forms})
-//     })
-//     .catch((error) => res.status(500).json({message: "Une erreur est survenue", error}));
-// }
+exports.news = (req, res) => {
+  Form.findAll({
+    where: {
+      viewed: {[Op.is]: false},
+    }
+  })
+    .then(forms => {
+      forms = forms.map(form => {
+        return {
+          ...form.toJSON(),
+          createdAt: dateFormatter(form.createdAt),
+        }
+      });
+      return res.json({message: "Formulaires chargés", data: forms})
+    })
+    .catch((error) => res.status(500).json({message: "Une erreur est survenue", error}));
+};
+
+exports.old = (req, res) => {
+  Form.findAll({
+    where: {
+      viewed: {[Op.not]: false},
+    }
+  })
+    .then(forms => {
+      forms = forms.map(form => {
+        return {
+          ...form.toJSON(),
+          createdAt: dateFormatter(form.createdAt),
+        }
+      });
+      return res.json({message: "Formulaires chargés", data: forms})
+    })
+    .catch((error) => res.status(500).json({message: "Une erreur est survenue", error}));
+}

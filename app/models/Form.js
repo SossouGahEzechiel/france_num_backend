@@ -55,8 +55,17 @@ module.exports = sequelize.define(tableName, {
       model: "users",
       key: "id"
     }
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null
+  },
+  viewed: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 }, {
   timestamps: true,
-  updatedAt: false
-})
+});
