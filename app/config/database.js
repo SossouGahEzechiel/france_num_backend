@@ -7,12 +7,14 @@ module.exports = {
     logging: console.log
   },
   production: {
-    dialect: process.env.DB_DIALECT || "mysql",
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    logging: false
+    dialect: process.env.DB_DIALECT || "postgres",
+    url: process.env.DB_CONNEXION_STRING,
+    logging: console.warn,
+    dialectOptions: {
+      ssl: {
+        require: true, // Exiger SSL
+        rejectUnauthorized: false // Accepter les certificats auto-signés
+      }
+    },
   }
 };
