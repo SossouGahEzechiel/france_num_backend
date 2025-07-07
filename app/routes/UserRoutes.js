@@ -5,6 +5,7 @@ const userValidator = require("../validators/UserValidator")
 
 router.get("/", UserController.index);
 router.post("/", userValidator, UserController.store);
-// router.get("/:id", UserController.show);
+router.put("/:id", userValidator, UserController.updateAccess);
+router.delete("/:id", userValidator, UserController.delete);
 
 module.exports = router;
