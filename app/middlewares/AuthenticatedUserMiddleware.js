@@ -4,8 +4,6 @@ const {User} = require("../models");
 module.exports = (req, res, next) => {
   const header = req.headers.authorization;
 
-  console.log("header:", header);
-
   if (!header) {
     return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
   }
