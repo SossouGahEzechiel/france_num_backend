@@ -3,7 +3,8 @@
   "packageManager": "yarn@4.6.0",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "yarn install --frozen-lockfile && yarn run build:app"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
