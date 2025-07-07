@@ -10,7 +10,8 @@ module.exports = {
       responsibleName: "John Doe",
       positionHeld: "Responsable Marketing",
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      userId: null
     }]);
   },
 
