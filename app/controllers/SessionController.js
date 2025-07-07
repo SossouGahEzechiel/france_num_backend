@@ -25,6 +25,10 @@ exports.login = (req, res) => {
           return res.status(422).json({message: "Identifiants incorrects"});
         }
 
+        if(!user.isActive){
+          return res.status(403).json({message: "Votre compte est désactivé"});
+        }
+
         const token = sign(
           {userId: user.id},
           process.env.JWT_SECRET,
