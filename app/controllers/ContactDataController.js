@@ -12,14 +12,15 @@ exports.index = (req, res) => {
       let config = data.at(0);
       if (!config)
         return res.json({message: "Aucune configuration", data: {}});
-      const {user, userId, ...configData} = config.toJSON(); // exclude User
+      let {user, userId, ...configData} = config.toJSON();
+
+      if (req.user) {
+        configData.adminName = user.name;
+        configData.updatedAt = dateFormatter(config.updatedAt);
+      }
 
       res.json({
-        data: {
-          ...configData,
-          updatedAt: dateFormatter(config.updatedAt),
-          adminName: config.user?.name
-        }
+        data: configData
       });
     })
     .catch(error => res.status(500).json({message: error.message, error}));
