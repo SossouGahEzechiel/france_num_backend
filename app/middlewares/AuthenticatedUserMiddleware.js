@@ -1,8 +1,30 @@
+const collect = require("collect.js");
+
 const {verify} = require("jsonwebtoken");
 const {User} = require("../models");
 
+const unProtectedRoutes = collect.collect([
+  {
+    url: "/api/auth/login",
+    method: "POST"
+  },
+  {
+    url: "/api/forms",
+    method: "POST"
+  },
+  {
+    url: "/api/contact-data",
+    method: "GET"
+  }
+]);
+
+
 module.exports = (req, res, next) => {
   const header = req.headers.authorization;
+
+  if (unProtectedRoutes.contains(route => route.url === req.path && route.method === req.method)) {
+    return next();
+  }
 
   if (!header) {
     return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
@@ -24,9 +46,8 @@ module.exports = (req, res, next) => {
       .then(user => {
         const {password, ...safeData} = user.toJSON();
         req.user = safeData;
-        next();
-      }).catch(_ => {
-      console.log("Auth middleware error:", _);
+        return next();
+      }).catch(() => {
       return res.status(401).json({message: "Vous devez vous connecter pour utiliser cette fonctionnalité"});
     })
 

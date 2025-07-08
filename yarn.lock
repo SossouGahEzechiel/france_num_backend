@@ -266,6 +266,7 @@ __metadata:
   dependencies:
     bcrypt: "npm:^6.0.0"
     body-parser: "npm:^2.2.0"
+    collect.js: "npm:^4.36.1"
     cors: "npm:^2.8.5"
     date-fns: "npm:^4.1.0"
     dotenv: "npm:^16.5.0"
@@ -542,6 +543,13 @@ __metadata:
     strip-ansi: "npm:^6.0.0"
     wrap-ansi: "npm:^7.0.0"
   checksum: 10c0/6035f5daf7383470cef82b3d3db00bec70afb3423538c50394386ffbbab135e26c3689c41791f911fa71b62d13d3863c712fdd70f0fbdffd938a1e6fd09aac00
+  languageName: node
+  linkType: hard
+
+"collect.js@npm:^4.36.1":
+  version: 4.36.1
+  resolution: "collect.js@npm:4.36.1"
+  checksum: 10c0/85b7ef845fc5d9b9bd65cbcedc692f48e8dc985d26fe859122f443cb1f5cf61a55798069cc13810cafff79c6ad91dd40ffc52adc23e06ba687ddcd9e2d08c7d0
   languageName: node
   linkType: hard
 
